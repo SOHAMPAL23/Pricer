@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './context/auth-context';
 import { useRouter } from 'next/navigation';
+import './dashboard.css';
 
 export default function Home() {
   const { user, logout, isAuthenticated } = useAuth();
@@ -159,14 +160,14 @@ export default function Home() {
   // Only render the interactive parts on the client
   if (!isClient || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12 animate-pulse">
-            <div className="h-12 bg-gray-800 rounded-lg mb-4 mx-auto w-3/4"></div>
-            <div className="h-6 bg-gray-800 rounded-lg mx-auto w-1/2"></div>
+      <div className="dashboard-container">
+        <div className="dashboard-wrapper">
+          <div className="dashboard-header">
+            <div className="loading-placeholder" style={{ height: '3rem', marginBottom: '1rem', maxWidth: '75%', margin: '0 auto 1rem' }}></div>
+            <div className="loading-placeholder" style={{ height: '1.5rem', maxWidth: '50%', margin: '0 auto' }}></div>
           </div>
-          <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl p-6">
-            <div className="h-64 bg-gray-700 rounded-xl animate-pulse"></div>
+          <div className="card">
+            <div className="loading-placeholder" style={{ height: '16rem' }}></div>
           </div>
         </div>
       </div>
@@ -174,31 +175,31 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="dashboard-container">
+      <div className="dashboard-wrapper">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="dashboard-header"
         >
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+          <div className="header-row">
+            <h1 className="dashboard-title">
               Simple Market Pricers
             </h1>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-300">Welcome, {user?.username}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span className="user-info">Welcome, {user?.username}</span>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                className="logout-btn"
               >
                 Logout
               </motion.button>
             </div>
           </div>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="dashboard-subtitle">
             Price financial instruments with precision - Options, Bonds, and Swaps
           </p>
         </motion.div>
@@ -208,28 +209,25 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-8 border-b border-gray-700"
+          className="tabs-container"
         >
-          <nav className="-mb-px flex space-x-8 justify-center">
+          <nav className="tabs-nav">
             {['options', 'bonds', 'swaps'].map((tab) => (
               <motion.button
                 key={tab}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveTab(tab)}
-                className={`py-4 px-1 border-b-2 font-medium text-lg transition-all duration-300 relative ${
-                  activeTab === tab
-                    ? 'text-blue-400'
-                    : 'text-gray-400 hover:text-gray-200'
-                }`}
+                className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
                 {activeTab === tab && (
                   <motion.div
                     layoutId="tabIndicator"
-                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                    className="tab-indicator"
                     initial={false}
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    style={{ width: '100%' }}
                   />
                 )}
               </motion.button>
@@ -242,7 +240,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden"
+          className="card"
         >
           <AnimatePresence mode="wait">
             {activeTab === 'options' && (
@@ -253,99 +251,97 @@ export default function Home() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="p-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
-                <div className="p-6">
-                  <h2 className="text-2xl font-bold text-white mb-6">Option Pricing (Black-Scholes)</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="card-header" style={{ background: 'linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%)' }}></div>
+                <div className="card-content">
+                  <h2 className="card-title">Option Pricing (Black-Scholes)</h2>
+                  <div className="form-grid">
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.2 }}
-                      className="space-y-6"
+                      className="form-column"
                     >
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Option Type</label>
-                          <motion.select
-                            whileFocus={{ scale: 1.02 }}
-                            name="type"
-                            value={optionParams.type}
-                            onChange={handleOptionChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-blue-500 focus:ring-blue-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          >
-                            <option className="bg-gray-700" value="call">Call Option</option>
-                            <option className="bg-gray-700" value="put">Put Option</option>
-                          </motion.select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Spot Price (S)</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            name="S"
-                            value={optionParams.S}
-                            onChange={handleOptionChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-blue-500 focus:ring-blue-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Strike Price (K)</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            name="K"
-                            value={optionParams.K}
-                            onChange={handleOptionChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-blue-500 focus:ring-blue-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Time to Expiry (T)</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            step="0.01"
-                            name="T"
-                            value={optionParams.T}
-                            onChange={handleOptionChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-blue-500 focus:ring-blue-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Risk-Free Rate (r)</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            step="0.01"
-                            name="r"
-                            value={optionParams.r}
-                            onChange={handleOptionChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-blue-500 focus:ring-blue-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Volatility (σ)</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            step="0.01"
-                            name="sigma"
-                            value={optionParams.sigma}
-                            onChange={handleOptionChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-blue-500 focus:ring-blue-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
+                      <div className="form-group">
+                        <label className="form-label">Option Type</label>
+                        <motion.select
+                          whileFocus={{ scale: 1.02 }}
+                          name="type"
+                          value={optionParams.type}
+                          onChange={handleOptionChange}
+                          className="form-select"
+                        >
+                          <option className="bg-gray-700" value="call">Call Option</option>
+                          <option className="bg-gray-700" value="put">Put Option</option>
+                        </motion.select>
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Spot Price (S)</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          name="S"
+                          value={optionParams.S}
+                          onChange={handleOptionChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Strike Price (K)</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          name="K"
+                          value={optionParams.K}
+                          onChange={handleOptionChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Time to Expiry (T)</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          step="0.01"
+                          name="T"
+                          value={optionParams.T}
+                          onChange={handleOptionChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Risk-Free Rate (r)</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          step="0.01"
+                          name="r"
+                          value={optionParams.r}
+                          onChange={handleOptionChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Volatility (σ)</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          step="0.01"
+                          name="sigma"
+                          value={optionParams.sigma}
+                          onChange={handleOptionChange}
+                          className="form-input"
+                        />
                       </div>
                       <motion.button
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={priceOption}
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 px-4 rounded-xl hover:from-blue-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 transition-all duration-300 shadow-xl"
+                        className="submit-btn"
                       >
                         {loading ? (
-                          <div className="flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <div className="spinner"></div>
                             Calculating...
                           </div>
                         ) : 'Price Option'}
@@ -360,60 +356,60 @@ export default function Home() {
                         <motion.div 
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="bg-gradient-to-br from-gray-700/50 to-gray-800/50 p-6 rounded-xl border border-gray-600"
+                          className="results-container"
                         >
-                          <h3 className="text-xl font-semibold text-white mb-4">Results</h3>
-                          <div className="space-y-4">
+                          <h3 className="results-title">Results</h3>
+                          <div className="results-grid">
                             <motion.div 
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: 0.1 }}
-                              className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg"
+                              className="result-item"
                             >
-                              <span className="text-gray-300">Price:</span>
-                              <span className="font-bold text-lg text-blue-400">${optionResult.price.toFixed(2)}</span>
+                              <span className="result-label">Price:</span>
+                              <span className="result-value call">${optionResult.price.toFixed(2)}</span>
                             </motion.div>
                             <motion.div 
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: 0.2 }}
-                              className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg"
+                              className="result-item"
                             >
-                              <span className="text-gray-300">Delta:</span>
-                              <span className="font-medium text-blue-300">{optionResult.delta.toFixed(3)}</span>
+                              <span className="result-label">Delta:</span>
+                              <span className="result-value">{optionResult.delta.toFixed(3)}</span>
                             </motion.div>
                             <motion.div 
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg"
+                              className="result-item"
                             >
-                              <span className="text-gray-300">Gamma:</span>
-                              <span className="font-medium text-blue-300">{optionResult.gamma.toFixed(3)}</span>
+                              <span className="result-label">Gamma:</span>
+                              <span className="result-value">{optionResult.gamma.toFixed(3)}</span>
                             </motion.div>
                             <motion.div 
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: 0.4 }}
-                              className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg"
+                              className="result-item"
                             >
-                              <span className="text-gray-300">Theta:</span>
-                              <span className="font-medium text-blue-300">{optionResult.theta.toFixed(3)}</span>
+                              <span className="result-label">Theta:</span>
+                              <span className="result-value">{optionResult.theta.toFixed(3)}</span>
                             </motion.div>
                             <motion.div 
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: 0.5 }}
-                              className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg"
+                              className="result-item"
                             >
-                              <span className="text-gray-300">Vega:</span>
-                              <span className="font-medium text-blue-300">{optionResult.vega.toFixed(3)}</span>
+                              <span className="result-label">Vega:</span>
+                              <span className="result-value">{optionResult.vega.toFixed(3)}</span>
                             </motion.div>
                           </div>
                         </motion.div>
                       ) : (
-                        <div className="bg-gradient-to-br from-gray-700/50 to-gray-800/50 p-6 rounded-xl border border-gray-600 h-full flex items-center justify-center">
-                          <p className="text-gray-400 text-center">
+                        <div className="results-container">
+                          <p className="results-placeholder">
                             Enter parameters and click "Price Option" to see results
                           </p>
                         </div>
@@ -432,86 +428,85 @@ export default function Home() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="p-1 bg-gradient-to-r from-green-500 to-emerald-500"></div>
-                <div className="p-6">
-                  <h2 className="text-2xl font-bold text-white mb-6">Bond Pricing</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="card-header" style={{ background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)' }}></div>
+                <div className="card-content">
+                  <h2 className="card-title">Bond Pricing</h2>
+                  <div className="form-grid">
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.2 }}
-                      className="space-y-6"
+                      className="form-column"
                     >
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Face Value</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            name="faceValue"
-                            value={bondParams.faceValue}
-                            onChange={handleBondChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-green-500 focus:ring-green-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Coupon Rate</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            step="0.01"
-                            name="couponRate"
-                            value={bondParams.couponRate}
-                            onChange={handleBondChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-green-500 focus:ring-green-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Years to Maturity</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            step="0.1"
-                            name="yearsToMaturity"
-                            value={bondParams.yearsToMaturity}
-                            onChange={handleBondChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-green-500 focus:ring-green-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Yield Rate</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            step="0.01"
-                            name="yieldRate"
-                            value={bondParams.yieldRate}
-                            onChange={handleBondChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-green-500 focus:ring-green-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Payments per Year</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            name="paymentsPerYear"
-                            value={bondParams.paymentsPerYear}
-                            onChange={handleBondChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-green-500 focus:ring-green-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
+                      <div className="form-group">
+                        <label className="form-label">Face Value</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          name="faceValue"
+                          value={bondParams.faceValue}
+                          onChange={handleBondChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Coupon Rate</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          step="0.01"
+                          name="couponRate"
+                          value={bondParams.couponRate}
+                          onChange={handleBondChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Years to Maturity</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          step="0.1"
+                          name="yearsToMaturity"
+                          value={bondParams.yearsToMaturity}
+                          onChange={handleBondChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Yield Rate</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          step="0.01"
+                          name="yieldRate"
+                          value={bondParams.yieldRate}
+                          onChange={handleBondChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Payments per Year</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          name="paymentsPerYear"
+                          value={bondParams.paymentsPerYear}
+                          onChange={handleBondChange}
+                          className="form-input"
+                        />
                       </div>
                       <motion.button
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={priceBond}
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-green-600 to-emerald-700 text-white py-3 px-4 rounded-xl hover:from-green-700 hover:to-emerald-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 transition-all duration-300 shadow-xl"
+                        className="submit-btn"
+                        style={{ background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)' }}
                       >
                         {loading ? (
-                          <div className="flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <div className="spinner"></div>
                             Calculating...
                           </div>
                         ) : 'Price Bond'}
@@ -526,33 +521,33 @@ export default function Home() {
                         <motion.div 
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="bg-gradient-to-br from-gray-700/50 to-gray-800/50 p-6 rounded-xl border border-gray-600"
+                          className="results-container"
                         >
-                          <h3 className="text-xl font-semibold text-white mb-4">Results</h3>
-                          <div className="space-y-4">
+                          <h3 className="results-title">Results</h3>
+                          <div className="results-grid">
                             <motion.div 
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: 0.1 }}
-                              className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg"
+                              className="result-item"
                             >
-                              <span className="text-gray-300">Price:</span>
-                              <span className="font-bold text-lg text-green-400">${bondResult.price.toFixed(2)}</span>
+                              <span className="result-label">Price:</span>
+                              <span className="result-value bond">${bondResult.price.toFixed(2)}</span>
                             </motion.div>
                             <motion.div 
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: 0.2 }}
-                              className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg"
+                              className="result-item"
                             >
-                              <span className="text-gray-300">Duration:</span>
-                              <span className="font-medium text-green-300">{bondResult.duration.toFixed(2)} years</span>
+                              <span className="result-label">Duration:</span>
+                              <span className="result-value">{bondResult.duration.toFixed(2)} years</span>
                             </motion.div>
                           </div>
                         </motion.div>
                       ) : (
-                        <div className="bg-gradient-to-br from-gray-700/50 to-gray-800/50 p-6 rounded-xl border border-gray-600 h-full flex items-center justify-center">
-                          <p className="text-gray-400 text-center">
+                        <div className="results-container">
+                          <p className="results-placeholder">
                             Enter parameters and click "Price Bond" to see results
                           </p>
                         </div>
@@ -571,86 +566,85 @@ export default function Home() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="p-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
-                <div className="p-6">
-                  <h2 className="text-2xl font-bold text-white mb-6">Interest Rate Swap Pricing</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="card-header" style={{ background: 'linear-gradient(90deg, #d946ef 0%, #c026d3 100%)' }}></div>
+                <div className="card-content">
+                  <h2 className="card-title">Interest Rate Swap Pricing</h2>
+                  <div className="form-grid">
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.2 }}
-                      className="space-y-6"
+                      className="form-column"
                     >
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Notional Amount</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            name="notional"
-                            value={swapParams.notional}
-                            onChange={handleSwapChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-purple-500 focus:ring-purple-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Fixed Rate</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            step="0.01"
-                            name="fixedRate"
-                            value={swapParams.fixedRate}
-                            onChange={handleSwapChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-purple-500 focus:ring-purple-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Floating Rate</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            step="0.01"
-                            name="floatingRate"
-                            value={swapParams.floatingRate}
-                            onChange={handleSwapChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-purple-500 focus:ring-purple-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Years to Maturity</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            step="0.1"
-                            name="yearsToMaturity"
-                            value={swapParams.yearsToMaturity}
-                            onChange={handleSwapChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-purple-500 focus:ring-purple-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-300 mb-1">Payments per Year</label>
-                          <motion.input
-                            whileFocus={{ scale: 1.02 }}
-                            type="number"
-                            name="paymentsPerYear"
-                            value={swapParams.paymentsPerYear}
-                            onChange={handleSwapChange}
-                            className="w-full rounded-xl bg-gray-700/50 border border-gray-600 text-white shadow-lg focus:border-purple-500 focus:ring-purple-500 p-3 border transition-all duration-200 hover:shadow-xl"
-                          />
-                        </div>
+                      <div className="form-group">
+                        <label className="form-label">Notional Amount</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          name="notional"
+                          value={swapParams.notional}
+                          onChange={handleSwapChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Fixed Rate</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          step="0.01"
+                          name="fixedRate"
+                          value={swapParams.fixedRate}
+                          onChange={handleSwapChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Floating Rate</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          step="0.01"
+                          name="floatingRate"
+                          value={swapParams.floatingRate}
+                          onChange={handleSwapChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Years to Maturity</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          step="0.1"
+                          name="yearsToMaturity"
+                          value={swapParams.yearsToMaturity}
+                          onChange={handleSwapChange}
+                          className="form-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Payments per Year</label>
+                        <motion.input
+                          whileFocus={{ scale: 1.02 }}
+                          type="number"
+                          name="paymentsPerYear"
+                          value={swapParams.paymentsPerYear}
+                          onChange={handleSwapChange}
+                          className="form-input"
+                        />
                       </div>
                       <motion.button
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={priceSwap}
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-purple-600 to-pink-700 text-white py-3 px-4 rounded-xl hover:from-purple-700 hover:to-pink-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 transition-all duration-300 shadow-xl"
+                        className="submit-btn"
+                        style={{ background: 'linear-gradient(90deg, #d946ef 0%, #c026d3 100%)' }}
                       >
                         {loading ? (
-                          <div className="flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <div className="spinner"></div>
                             Calculating...
                           </div>
                         ) : 'Price Swap'}
@@ -665,18 +659,18 @@ export default function Home() {
                         <motion.div 
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="bg-gradient-to-br from-gray-700/50 to-gray-800/50 p-6 rounded-xl border border-gray-600"
+                          className="results-container"
                         >
-                          <h3 className="text-xl font-semibold text-white mb-4">Results</h3>
-                          <div className="space-y-4">
+                          <h3 className="results-title">Results</h3>
+                          <div className="results-grid">
                             <motion.div 
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: 0.1 }}
-                              className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg"
+                              className="result-item"
                             >
-                              <span className="text-gray-300">Present Value:</span>
-                              <span className="font-bold text-lg text-purple-400">
+                              <span className="result-label">Present Value:</span>
+                              <span className="result-value swap">
                                 ${swapResult.presentValue.toLocaleString(undefined, {maximumFractionDigits: 2})}
                               </span>
                             </motion.div>
@@ -684,16 +678,16 @@ export default function Home() {
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: 0.2 }}
-                              className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg"
+                              className="result-item"
                             >
-                              <span className="text-gray-300">Par Swap Rate:</span>
-                              <span className="font-medium text-purple-300">{(swapResult.parSwapRate * 100).toFixed(4)}%</span>
+                              <span className="result-label">Par Swap Rate:</span>
+                              <span className="result-value">{(swapResult.parSwapRate * 100).toFixed(4)}%</span>
                             </motion.div>
                           </div>
                         </motion.div>
                       ) : (
-                        <div className="bg-gradient-to-br from-gray-700/50 to-gray-800/50 p-6 rounded-xl border border-gray-600 h-full flex items-center justify-center">
-                          <p className="text-gray-400 text-center">
+                        <div className="results-container">
+                          <p className="results-placeholder">
                             Enter parameters and click "Price Swap" to see results
                           </p>
                         </div>
@@ -711,25 +705,23 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-12 bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden"
+          className="card info-card"
         >
-          <div className="p-1 bg-gradient-to-r from-gray-600 to-gray-800"></div>
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-white mb-4">About Simple Market Pricers</h2>
-            <div className="prose prose-invert max-w-none">
-              <p className="text-gray-300 mb-4">
-                This application provides pricing for three key financial instruments:
-              </p>
-              <ul className="list-disc pl-5 space-y-2 text-gray-300 mb-4">
-                <li><span className="text-blue-400 font-medium">European Options</span> - Using the Black-Scholes model with Greeks calculation</li>
-                <li><span className="text-green-400 font-medium">Fixed-Coupon Bonds</span> - With yield-to-maturity and duration calculation</li>
-                <li><span className="text-purple-400 font-medium">Plain-Vanilla Interest Rate Swaps</span> - Fixed-for-floating swaps</li>
-              </ul>
-              <p className="text-gray-300">
-                The backend is powered by a Python library implementing industry-standard pricing models.
-                All calculations are performed in real-time as you adjust the parameters.
-              </p>
-            </div>
+          <div className="info-card-header"></div>
+          <div className="info-content">
+            <h2 className="info-title">About Simple Market Pricers</h2>
+            <p className="info-description">
+              This application provides pricing for three key financial instruments:
+            </p>
+            <ul className="info-list">
+              <li className="info-list-item"><span className="info-highlight call">European Options</span> - Using the Black-Scholes model with Greeks calculation</li>
+              <li className="info-list-item"><span className="info-highlight bond">Fixed-Coupon Bonds</span> - With yield-to-maturity and duration calculation</li>
+              <li className="info-list-item"><span className="info-highlight swap">Plain-Vanilla Interest Rate Swaps</span> - Fixed-for-floating swaps</li>
+            </ul>
+            <p className="info-description">
+              The backend is powered by a Python library implementing industry-standard pricing models.
+              All calculations are performed in real-time as you adjust the parameters.
+            </p>
           </div>
         </motion.div>
       </div>

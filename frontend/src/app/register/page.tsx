@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import '../auth.css';
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -65,148 +66,144 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center p-4">
+    <div className="auth-container">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
       >
-        <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
-          <div className="p-1 bg-gradient-to-r from-green-500 to-teal-500"></div>
-          <div className="p-8">
-            <div className="text-center mb-8">
-              <motion.h1 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="text-3xl font-bold text-white mb-2"
-              >
-                Create Account
-              </motion.h1>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="text-gray-400"
-              >
-                Sign up for a new account
-              </motion.p>
+        <div className="auth-card">
+          <div className="auth-header">
+            <motion.h1 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="auth-title"
+            >
+              Create Account
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="auth-subtitle"
+            >
+              Sign up for a new account
+            </motion.p>
+          </div>
+
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="alert alert-error"
+            >
+              {error}
+            </motion.div>
+          )}
+
+          {success && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="alert alert-success"
+            >
+              Registration successful! Redirecting to dashboard...
+            </motion.div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label className="form-label">
+                Username
+              </label>
+              <motion.input
+                whileFocus={{ scale: 1.02 }}
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="form-input"
+                placeholder="Enter your username"
+                required
+              />
             </div>
 
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="mb-6 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-300 text-sm"
-              >
-                {error}
-              </motion.div>
-            )}
-
-            {success && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="mb-6 p-3 bg-green-900/50 border border-green-700 rounded-lg text-green-300 text-sm"
-              >
-                Registration successful! Redirecting to dashboard...
-              </motion.div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Username
-                </label>
-                <motion.input
-                  whileFocus={{ scale: 1.02 }}
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                  placeholder="Enter your username"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Email Address
-                </label>
-                <motion.input
-                  whileFocus={{ scale: 1.02 }}
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                  placeholder="you@example.com"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Password
-                </label>
-                <motion.input
-                  whileFocus={{ scale: 1.02 }}
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                  placeholder="••••••••"
-                  required
-                />
-                <p className="mt-1 text-xs text-gray-500">Must be at least 6 characters</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Confirm Password
-                </label>
-                <motion.input
-                  whileFocus={{ scale: 1.02 }}
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={loading || success}
-                className="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 shadow-lg disabled:opacity-50"
-              >
-                {loading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Creating account...
-                  </div>
-                ) : success ? (
-                  'Redirecting...'
-                ) : (
-                  'Sign Up'
-                )}
-              </motion.button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-gray-400">
-                Already have an account?{' '}
-                <button
-                  onClick={() => router.push('/login')}
-                  className="text-green-400 hover:text-green-300 font-medium transition-colors"
-                >
-                  Sign in
-                </button>
-              </p>
+            <div className="form-group">
+              <label className="form-label">
+                Email Address
+              </label>
+              <motion.input
+                whileFocus={{ scale: 1.02 }}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="form-input"
+                placeholder="you@example.com"
+                required
+              />
             </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                Password
+              </label>
+              <motion.input
+                whileFocus={{ scale: 1.02 }}
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="form-input"
+                placeholder="••••••••"
+                required
+              />
+              <p className="auth-footer-text" style={{ marginTop: '0.25rem' }}>Must be at least 6 characters</p>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                Confirm Password
+              </label>
+              <motion.input
+                whileFocus={{ scale: 1.02 }}
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="form-input"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              disabled={loading || success}
+              className="btn btn-secondary"
+            >
+              {loading ? (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div className="spinner"></div>
+                  Creating account...
+                </div>
+              ) : success ? (
+                'Redirecting...'
+              ) : (
+                'Sign Up'
+              )}
+            </motion.button>
+          </form>
+
+          <div className="auth-footer">
+            <p className="auth-footer-text">
+              Already have an account?{' '}
+              <button
+                onClick={() => router.push('/login')}
+                className="auth-footer-link"
+              >
+                Sign in
+              </button>
+            </p>
           </div>
         </div>
       </motion.div>
