@@ -184,10 +184,25 @@ export default function Home() {
           className="dashboard-header"
         >
           <div className="header-row">
-            <h1 className="dashboard-title">
-              Simple Market Pricers
-            </h1>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div className="header-content">
+              <motion.h1 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="dashboard-title"
+              >
+                Simple Market Pricers
+              </motion.h1>
+              <motion.p 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="dashboard-subtitle"
+              >
+                Professional financial instrument pricing tools
+              </motion.p>
+            </div>
+            <div className="user-actions">
               <span className="user-info">Welcome, {user?.username}</span>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -199,9 +214,6 @@ export default function Home() {
               </motion.button>
             </div>
           </div>
-          <p className="dashboard-subtitle">
-            Price financial instruments with precision - Options, Bonds, and Swaps
-          </p>
         </motion.div>
 
         {/* Navigation Tabs */}
@@ -240,7 +252,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="card"
+          className="card main-card"
         >
           <AnimatePresence mode="wait">
             {activeTab === 'options' && (
@@ -250,6 +262,7 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
+                className="tab-content"
               >
                 <div className="card-header" style={{ background: 'linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%)' }}></div>
                 <div className="card-content">
@@ -351,6 +364,7 @@ export default function Home() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
+                      className="results-column"
                     >
                       {optionResult ? (
                         <motion.div 
@@ -409,9 +423,14 @@ export default function Home() {
                         </motion.div>
                       ) : (
                         <div className="results-container">
-                          <p className="results-placeholder">
-                            Enter parameters and click "Price Option" to see results
-                          </p>
+                          <div className="results-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            <p className="results-placeholder-text">
+                              Enter parameters and click "Price Option" to see results
+                            </p>
+                          </div>
                         </div>
                       )}
                     </motion.div>
@@ -427,6 +446,7 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
+                className="tab-content"
               >
                 <div className="card-header" style={{ background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)' }}></div>
                 <div className="card-content">
@@ -516,6 +536,7 @@ export default function Home() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
+                      className="results-column"
                     >
                       {bondResult ? (
                         <motion.div 
@@ -547,9 +568,14 @@ export default function Home() {
                         </motion.div>
                       ) : (
                         <div className="results-container">
-                          <p className="results-placeholder">
-                            Enter parameters and click "Price Bond" to see results
-                          </p>
+                          <div className="results-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p className="results-placeholder-text">
+                              Enter parameters and click "Price Bond" to see results
+                            </p>
+                          </div>
                         </div>
                       )}
                     </motion.div>
@@ -565,6 +591,7 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
+                className="tab-content"
               >
                 <div className="card-header" style={{ background: 'linear-gradient(90deg, #d946ef 0%, #c026d3 100%)' }}></div>
                 <div className="card-content">
@@ -654,6 +681,7 @@ export default function Home() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
+                      className="results-column"
                     >
                       {swapResult ? (
                         <motion.div 
@@ -687,9 +715,14 @@ export default function Home() {
                         </motion.div>
                       ) : (
                         <div className="results-container">
-                          <p className="results-placeholder">
-                            Enter parameters and click "Price Swap" to see results
-                          </p>
+                          <div className="results-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                            <p className="results-placeholder-text">
+                              Enter parameters and click "Price Swap" to see results
+                            </p>
+                          </div>
                         </div>
                       )}
                     </motion.div>
